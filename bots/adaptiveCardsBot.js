@@ -12,6 +12,20 @@ const SolitaireCard = require('../resources/SolitaireCard.json');
 
 const VideoCard = require('../resources/VideoCard.json');
 
+const card = CardFactory.videoCard(
+    '2018 Imagine Cup World Championship Intro',
+    [{ url: 'https://adaptivecardsblob.blob.core.windows.net/assets/AdaptiveCardsOverviewVideo.mp4' }],
+    [{
+        type: 'openUrl',
+        title: 'Lean More',
+        value: 'https://channel9.msdn.com/Events/Imagine-Cup/World-Finals-2018/2018-Imagine-Cup-World-Championship-Intro'
+    }],
+    {
+        subtitle: 'by Microsoft',
+        text: 'Microsoft\'s Imagine Cup has empowered student developers around the world to create and innovate on the world stage for the past 16 years. These innovations will shape how we live, work and play.'
+    }
+);
+
 // Create array of AdaptiveCard content, this will be used to send a random card to the user.
 const CARDS = [
     // FlightItineraryCard,
@@ -31,7 +45,7 @@ class AdaptiveCardsBot extends ActivityHandler {
             const membersAdded = context.activity.membersAdded;
             for (let cnt = 0; cnt < membersAdded.length; cnt++) {
                 if (membersAdded[cnt].id !== context.activity.recipient.id) {
-                    await context.sendActivity(`Welcome to Adaptive Cards Bot  ${membersAdded[cnt].name}. ${WELCOME_TEXT}`);
+                    await context.sendActivity(`Welcome to Adaptive Cards Bot  ${ membersAdded[cnt].name }. ${ WELCOME_TEXT }`);
                 }
             }
 
@@ -41,9 +55,14 @@ class AdaptiveCardsBot extends ActivityHandler {
 
         this.onMessage(async (context, next) => {
             const randomlySelectedCard = CARDS[Math.floor((Math.random() * CARDS.length - 1) + 1)];
+            // await context.sendActivity({
+            //     text: 'Here is an Adaptive Card:',
+            //     attachments: [CardFactory.adaptiveCard(randomlySelectedCard)]
+            // });
+
             await context.sendActivity({
                 text: 'Here is an Adaptive Card:',
-                attachments: [CardFactory.adaptiveCard(randomlySelectedCard)]
+                attachments: [card]
             });
 
             // By calling next() you ensure that the next BotHandler is run.
